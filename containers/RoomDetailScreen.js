@@ -1,15 +1,35 @@
-import React from "react";
+import React, { Component } from "react";
 import { useRoute } from "@react-navigation/core";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { AppRegistry, StyleSheet, Text, View, Image } from "react-native";
 import { Rating } from "react-native-ratings";
 import MapView from "react-native-maps";
+import Swiper from "react-native-swiper";
+
+const SwiperComponent = ({ tabPhotos }) => {
+  const tabView = [];
+  for (let i = 0; i < tabPhotos.length; i++) {
+    console.log(tabPhotos[i]);
+    tabView.push(
+      <View key={i}>
+        <Image style={styles.imagesSwipper} source={{ uri: tabPhotos[i] }} />
+      </View>
+    );
+  }
+  return (
+    <Swiper style={styles.wrapper} showsButtons={false}>
+      {tabView}
+    </Swiper>
+  )
+}
 
 export default function RoomDetailScreen() {
+
   const { params } = useRoute();
   return (
     <View style={styles.pages}>
       {/* <Text>{JSON.stringify(params)}</Text> */}
-      <Image style={styles.images} source={{ uri: params.item.photos[0] }} />
+      <SwiperComponent style={styles.images} tabPhotos={params.item.photos} />
+      {/* <Image style={styles.images} source={{ uri: params.item.photos[0] }} /> */}
       <Text style={styles.price}>{params.item.price} €</Text>
       <View style={styles.description}>
         <View style={styles.legend}>
@@ -31,6 +51,7 @@ export default function RoomDetailScreen() {
           </View>
           <View style={styles.imageLegend}>
             <Image style={styles.portrait} source={{ uri: params.item.user.account.photos[0] }} />
+
           </View>
         </View>
         <View style={styles.info}>
@@ -62,6 +83,32 @@ export default function RoomDetailScreen() {
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+
+  },
+  slide1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF'
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#97CAE5'
+  },
+  slide3: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#92BBD9'
+  },
+  text: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold'
+  },
   info: {
     justifyContent: "center",
     alignItems: "center",
@@ -85,12 +132,15 @@ const styles = StyleSheet.create({
   images: {
     flex: 1,
   },
+  imagesSwipper: {
+    height: '100%',
+  },
   legend: {
     flex: 1,
   },
   price: {
     position: 'absolute',
-    top: 290,
+    top: 260,
     backgroundColor: 'black',
     color: 'white',
     padding: 20,

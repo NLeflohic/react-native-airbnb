@@ -100,13 +100,21 @@ export default function App() {
                           <Stack.Screen name="Home" options={{
                             title: "Mon Airbnb",
                             headerStyle: { backgroundColor: "#FF5B60" },
-                            headerTitleStyle: { color: "white" }
+                            headerTitleStyle: { color: "white" },
+                            headerBackTitleVisible: false,
+                            headerTintColor: "white",
                           }}>
                             {() => <HomeScreen />}
                           </Stack.Screen>
                           <Stack.Screen
                             name="RoomDetail"
-                            options={{ title: "Room" }}
+                            options={{
+                              title: "Room",
+                              headerStyle: { backgroundColor: "#FF5B60" },
+                              headerTitleStyle: { color: "white" },
+                              headerBackTitleVisible: false,
+                              headerTintColor: "white",
+                            }}
                           >
                             {() => <RoomDetailScreen item={null} />}
                           </Stack.Screen>
