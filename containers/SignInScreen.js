@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   graph: {
-    height: 400,
+    height: 300,
     justifyContent: 'space-around',
     alignItems: 'center',
   },

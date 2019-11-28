@@ -1,14 +1,13 @@
-import React, { Component } from "react";
-import { useRoute } from "@react-navigation/core";
-import { AppRegistry, StyleSheet, Text, View, Image } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, View, Image, Platform } from "react-native";
 import { Rating } from "react-native-ratings";
 import MapView from "react-native-maps";
 import Swiper from "react-native-swiper";
+import { useRoute } from "@react-navigation/core";
 
 const SwiperComponent = ({ tabPhotos }) => {
   const tabView = [];
   for (let i = 0; i < tabPhotos.length; i++) {
-    console.log(tabPhotos[i]);
     tabView.push(
       <View key={i}>
         <Image style={styles.imagesSwipper} source={{ uri: tabPhotos[i] }} />
@@ -16,21 +15,24 @@ const SwiperComponent = ({ tabPhotos }) => {
     );
   }
   return (
-    <Swiper style={styles.wrapper} showsButtons={false}>
+    <Swiper showsButtons={false}>
       {tabView}
     </Swiper>
   )
+
 }
 
 export default function RoomDetailScreen() {
-
+  const [isDescriptionDisplayed, setIsDescriptionDisplayed] = useState(false);
   const { params } = useRoute();
   return (
-    <View style={styles.pages}>
+    <ScrollView style={styles.pages}>
       {/* <Text>{JSON.stringify(params)}</Text> */}
-      <SwiperComponent style={styles.images} tabPhotos={params.item.photos} />
-      {/* <Image style={styles.images} source={{ uri: params.item.photos[0] }} /> */}
-      <Text style={styles.price}>{params.item.price} €</Text>
+      <View style={styles.wrapper}>
+        <SwiperComponent style={styles.images} tabPhotos={params.item.photos} />
+        {/* <Image style={styles.images} source={{ uri: params.item.photos[0] }} /> */}
+        <Text style={styles.price}>{params.item.price} €</Text>
+      </View>
       <View style={styles.description}>
         <View style={styles.legend}>
           <View style={styles.textLegend}>
@@ -55,9 +57,12 @@ export default function RoomDetailScreen() {
           </View>
         </View>
         <View style={styles.info}>
-          <Text style={styles.textDescription} numberOfLines={3}>{params.item.description}</Text>
+          <Text style={styles.textDescription} onPress={() => {
+            setIsDescriptionDisplayed(!isDescriptionDisplayed)
+          }}
+            numberOfLines={isDescriptionDisplayed === false ? 3 : 0}
+          >{params.item.description}</Text>
           <MapView
-            // La MapView doit obligatoirement avoir des dimensions
             style={styles.map}
             initialRegion={{
               latitude: params.item.loc[1],
@@ -78,31 +83,16 @@ export default function RoomDetailScreen() {
           </MapView>
         </View>
       </View>
-    </View >
+    </ScrollView >
   );
 };
 
 const styles = StyleSheet.create({
+  description: {
+    flex: 1,
+  },
   wrapper: {
-
-  },
-  slide1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF'
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5'
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9'
+    height: 350,
   },
   text: {
     color: '#fff',
@@ -129,11 +119,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  images: {
-    flex: 1,
-  },
   imagesSwipper: {
-    height: '100%',
+    height: 350,
   },
   legend: {
     flex: 1,

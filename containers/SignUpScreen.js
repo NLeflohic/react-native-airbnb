@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Button, Text, TextInput, View, AsyncStorage } from "react-native";
+import { StyleSheet, Button, Text, TextInput, View, AsyncStorage, KeyboardAvoidingView, Platform } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import axios from "axios";
@@ -44,6 +44,7 @@ export default function SignUpScreen({ setToken }) {
     }
   }
 
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 70 : 0
 
   return (
     <View style={styles.body}>
@@ -51,27 +52,29 @@ export default function SignUpScreen({ setToken }) {
         <Ionicons style={styles.icon} name="ios-home" size={128} color='white' />
         <Text style={styles.welcome}>Welcome</Text>
       </View>
-      <View style={styles.loginInfo}>
-        <View style={styles.input}>
-          <TextInput placeholder="Email" style={styles.username} onChangeText={emailChange} />
-        </View>
-        <View style={styles.input}>
-          <TextInput placeholder="Username" style={styles.username} onChangeText={usernameChange} />
-        </View>
-        <View style={styles.input}>
-          <TextInput placeholder="Password" secureTextEntry={true} style={styles.password} onChangeText={passwordChange} />
-        </View>
-        <View style={styles.input}>
-          <TextInput placeholder="Password confirmation" secureTextEntry={true} style={styles.password} onChangeText={passConfChange} />
-        </View>
-        {!connected &&
-          <TouchableOpacity style={styles.button} onPress={onSignup}>
-            <View>
-              <Text style={styles.textBtn}>Sign up</Text>
-            </View>
-          </TouchableOpacity>
-        }
-      </View >
+      <KeyboardAvoidingView behavior='padding'>
+        <View style={styles.loginInfo}>
+          <View style={styles.input}>
+            <TextInput placeholder="Email" style={styles.username} onChangeText={emailChange} />
+          </View>
+          <View style={styles.input}>
+            <TextInput placeholder="Username" style={styles.username} onChangeText={usernameChange} />
+          </View>
+          <View style={styles.input}>
+            <TextInput placeholder="Password" secureTextEntry={true} style={styles.password} onChangeText={passwordChange} />
+          </View>
+          <View style={styles.input}>
+            <TextInput placeholder="Password confirmation" secureTextEntry={true} style={styles.password} onChangeText={passConfChange} />
+          </View>
+          {!connected &&
+            <TouchableOpacity style={styles.button} onPress={onSignup}>
+              <View>
+                <Text style={styles.textBtn}>Sign up</Text>
+              </View>
+            </TouchableOpacity>
+          }
+        </View >
+      </KeyboardAvoidingView>
     </View >
   );
 }
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   graph: {
-    height: 400,
+    height: 300,
     justifyContent: 'space-around',
     alignItems: 'center',
   },

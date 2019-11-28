@@ -60,7 +60,13 @@ export default function App() {
             </Stack.Screen>
             <Stack.Screen
               name="SignUp"
-              options={{ title: "SignUp" }}
+              options={{
+                title: "SignUp",
+                headerStyle: { backgroundColor: "#FF5B60" },
+                headerTitleStyle: { color: "white" },
+                headerBackTitleVisible: false,
+                headerTintColor: "white"
+              }}
             >
               {() =>
                 < SignUpScreen setToken={setToken} />

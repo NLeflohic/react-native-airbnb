@@ -41,7 +41,7 @@ export default function HomeScreen() {
     //     }}
     //   />
     // </View>
-    <ScrollView>
+    <View>
       <FlatList
         data={offers.rooms}
         keyExtractor={item => item._id}
@@ -84,7 +84,7 @@ export default function HomeScreen() {
         )}
         ItemSeparatorComponent={renderSeparator}
       />
-    </ScrollView>
+    </View>
   );
 }
 
