@@ -1,9 +1,9 @@
 import React from "react";
-import { AsyncStorage, StatusBar } from "react-native";
+import { AsyncStorage, StatusBar, ActivityIndicator } from "react-native";
 import { NavigationNativeContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "./containers/HomeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
@@ -16,6 +16,7 @@ const Stack = createStackNavigator();
 export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
+  const [userId, setUserId] = React.useState(null);
   // const [currentOffer, setCurrentOffer] = React.useState(null);
 
   const setToken = async token => {
@@ -46,6 +47,7 @@ export default function App() {
   return (
 
     <NavigationNativeContainer>
+      <ActivityIndicator />
       <StatusBar backgroundColor='#FF4858' barStyle="light-content" />
       <Stack.Navigator>
 
@@ -56,7 +58,7 @@ export default function App() {
           // No token found, user isn't signed in
           <>
             <Stack.Screen name="SignIn" options={{ header: () => null }}>
-              {() => <SignInScreen setToken={setToken} />}
+              {() => <SignInScreen setToken={setToken} setUserId={setUserId} />}
             </Stack.Screen>
             <Stack.Screen
               name="SignUp"
@@ -69,7 +71,7 @@ export default function App() {
               }}
             >
               {() =>
-                < SignUpScreen setToken={setToken} />
+                < SignUpScreen setToken={setToken} seUserId={setUserId} />
               }
             </Stack.Screen>
           </>
@@ -84,6 +86,9 @@ export default function App() {
                           let iconName;
                           if (route.name === "Settings") {
                             iconName = `ios-options`;
+                          } else if (route.name === "Profile") {
+                            iconName = `face-profile`;
+                            return (<MaterialCommunityIcons name={iconName} size={size} color={color} />)
                           } else {
                             iconName = `ios-home`;
                           }
@@ -124,11 +129,24 @@ export default function App() {
                           >
                             {() => <RoomDetailScreen item={null} />}
                           </Stack.Screen>
+                        </Stack.Navigator>
+                      )}
+                    </Tab.Screen>
+
+                    <Tab.Screen name="Profile">
+                      {() => (
+                        <Stack.Navigator>
                           <Stack.Screen
                             name="Profile"
-                            options={{ title: "User Profile" }}
+                            options={{
+                              title: "User Profile",
+                              headerStyle: { backgroundColor: "#FF5B60" },
+                              headerTitleStyle: { color: "white" },
+                              // headerBackTitleVisible: false,
+                              // headerTintColor: "white",
+                            }}
                           >
-                            {() => <ProfileScreen token={userToken} />}
+                            {() => <ProfileScreen userId={userId} />}
                           </Stack.Screen>
                         </Stack.Navigator>
                       )}

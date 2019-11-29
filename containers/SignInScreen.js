@@ -6,7 +6,7 @@ import axios from "axios";
 import { white } from "ansi-colors";
 import { useNavigation } from "@react-navigation/core";
 
-export default function SignInScreen({ setToken }) {
+export default function SignInScreen({ setToken, setUserId }) {
   const navigation = useNavigation();
   const [connected, setConnected] = useState(false);
   const [username, setUsername] = useState("");
@@ -23,24 +23,34 @@ export default function SignInScreen({ setToken }) {
     console.log("username", username);
     console.log("password", password);
 
-    const response = await axios.post("https://airbnb-api.now.sh/api/user/log_in", {
+    const response = await axios.post("https://airbnb-api.herokuapp.com//api/user/log_in", {
       email: username, //"arno@airbnb-api.com",
       password: password //"password01"
     });
     if (response.data.token) {
       const stored = await AsyncStorage.getItem("token");
-      console.log(stored);
+      console.log("stored ", stored);
+      const storedId = await AsyncStorage.getItem("userid");
+      console.log("storedId ", storedId);
       if (stored === null) {
         await AsyncStorage.setItem("token", response.data.token);
-        const userToken = response.data.token;
+        await AsyncStorage.setItem("userid", response.data._id);
+        const userId = response.data._id;
+        console.log("user id: ", userId)
+        setUserId(userId);
         setToken(userToken);
         setConnected(true);
       } else {
         if (stored === response.data.token) {
           const userToken = response.data.token;
+          await AsyncStorage.setItem("userid", response.data._id);
+          const userId = response.data._id;
+          console.log("user id: ", "id ", userId, response.data._id)
+          setUserId(userId);
           setToken(userToken);
           setConnected(true);
         } else {
+          setUserId(null);
           setToken(null);
           setConnected(false);
         }

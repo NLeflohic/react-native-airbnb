@@ -8,7 +8,7 @@ export default function HomeScreen() {
   const navigation = useNavigation();
   const [offers, setOffers] = useState({});
   const fetchdata = async () => {
-    const response = await axios.get("https://airbnb-api.now.sh/api/room?city=paris");
+    const response = await axios.get("https://airbnb-api.herokuapp.com/api/room?city=paris");
     if (response) {
       setOffers(response.data);
     }

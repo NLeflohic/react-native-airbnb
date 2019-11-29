@@ -1,7 +1,13 @@
 import React from "react";
-import { Button, Text, View } from "react-native";
+import { Button, Text, View, AsyncStorage } from "react-native";
 
 export default function SettingsScreen({ setToken }) {
+
+  const delCookie = async () => {
+    await AsyncStorage.setItem("token", "");
+    await AsyncStorage.setItem("userid", "");
+  }
+
   return (
     <View>
       <Text>Hello Settings</Text>
@@ -10,6 +16,7 @@ export default function SettingsScreen({ setToken }) {
         title="Log Out"
         onPress={() => {
           setToken(null);
+          delCookie();
         }}
       />
     </View>

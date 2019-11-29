@@ -6,7 +6,7 @@ import axios from "axios";
 import { white } from "ansi-colors";
 import { useNavigation } from "@react-navigation/core";
 
-export default function SignUpScreen({ setToken }) {
+export default function SignUpScreen({ setToken, setUserId }) {
   const navigation = useNavigation();
   const [connected, setConnected] = useState(false);
   const [username, setUsername] = useState("");
@@ -28,7 +28,7 @@ export default function SignUpScreen({ setToken }) {
   }
 
   const onSignup = async () => {
-    const response = await axios.post("https://airbnb-api.now.sh/api/user/sign_up", {
+    const response = await axios.post("https://airbnb-api.herokuapp.com/api/user/sign_up", {
       email: email,
       password: password,
       username: username,
@@ -36,7 +36,10 @@ export default function SignUpScreen({ setToken }) {
     console.log(response.data);
     if (response.data.token) {
       await AsyncStorage.setItem("token", response.data.token);
+      await AsyncStorage.setItem("userid", response.data._id);
       const userToken = response.data.token;
+      const userId = response.data._id;
+      setUserId(userId);
       setToken(userToken);
       setConnected(true);
     } else {
