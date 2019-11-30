@@ -58,7 +58,6 @@ export default function App() {
   return (
 
     <NavigationNativeContainer>
-      <ActivityIndicator />
       <StatusBar backgroundColor='#FF4858' barStyle="light-content" />
       <Stack.Navigator>
 
