@@ -17,7 +17,6 @@ export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
   const [userId, setUserId] = React.useState(null);
-  // const [currentOffer, setCurrentOffer] = React.useState(null);
 
   const setToken = async token => {
     if (token) {
@@ -25,20 +24,32 @@ export default function App() {
     } else {
       AsyncStorage.removeItem("userToken");
     }
-
     setUserToken(token);
   };
+
+  const setId = async token => {
+    if (token) {
+      AsyncStorage.setItem("userId", token);
+    } else {
+      AsyncStorage.removeItem("userId");
+    }
+    setUserToken(token);
+  };
+
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       // We should also handle error for production apps
       const userToken = await AsyncStorage.getItem("userToken");
+      const userId = await AsyncStorage.getItem("userId");
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       setIsLoading(false);
       setUserToken(userToken);
+      setUserId(userId);
+
     };
 
     bootstrapAsync();
@@ -58,7 +69,7 @@ export default function App() {
           // No token found, user isn't signed in
           <>
             <Stack.Screen name="SignIn" options={{ header: () => null }}>
-              {() => <SignInScreen setToken={setToken} setUserId={setUserId} />}
+              {() => <SignInScreen setToken={setToken} setUserId={setId} />}
             </Stack.Screen>
             <Stack.Screen
               name="SignUp"
@@ -71,7 +82,7 @@ export default function App() {
               }}
             >
               {() =>
-                < SignUpScreen setToken={setToken} seUserId={setUserId} />
+                < SignUpScreen setToken={setToken} seUserId={setId} />
               }
             </Stack.Screen>
           </>
@@ -159,7 +170,7 @@ export default function App() {
                             name="Settings"
                             options={{ title: "Settings" }}
                           >
-                            {() => <SettingsScreen setToken={setToken} />}
+                            {() => <SettingsScreen setToken={setToken} setId={setId} />}
                           </Stack.Screen>
                         </Stack.Navigator>
                       )}

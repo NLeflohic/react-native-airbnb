@@ -23,7 +23,7 @@ export default function SignInScreen({ setToken, setUserId }) {
     console.log("username", username);
     console.log("password", password);
 
-    const response = await axios.post("https://airbnb-api.herokuapp.com//api/user/log_in", {
+    const response = await axios.post("https://airbnb-api.herokuapp.com/api/user/log_in", {
       email: username, //"arno@airbnb-api.com",
       password: password //"password01"
     });
@@ -32,10 +32,11 @@ export default function SignInScreen({ setToken, setUserId }) {
       console.log("stored ", stored);
       const storedId = await AsyncStorage.getItem("userid");
       console.log("storedId ", storedId);
-      if (stored === null) {
-        await AsyncStorage.setItem("token", response.data.token);
-        await AsyncStorage.setItem("userid", response.data._id);
+      if ((stored === null) || (storedId === null)) {
+        await AsyncStorage.setItem("userToken", response.data.token);
+        await AsyncStorage.setItem("userId", response.data._id);
         const userId = response.data._id;
+        const userToken = response.data.token;
         console.log("user id: ", userId)
         setUserId(userId);
         setToken(userToken);

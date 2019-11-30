@@ -5,6 +5,7 @@ import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function ProfileScreen() {
   const [token, setToken] = useState(null);
@@ -13,6 +14,7 @@ export default function ProfileScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [isModify, setIsModify] = useState(false);
 
   const fetchdata = async () => {
     const url = "https://airbnb-api.herokuapp.com/api/user/" + userId;
@@ -43,8 +45,8 @@ export default function ProfileScreen() {
   };
 
   const getToken = async () => {
-    const storedToken = await AsyncStorage.getItem("token");
-    const storedId = await AsyncStorage.getItem("userid");
+    const storedToken = await AsyncStorage.getItem("userToken");
+    const storedId = await AsyncStorage.getItem("userId");
     setToken(storedToken);
     setUserId(storedId);
   };
@@ -134,66 +136,96 @@ export default function ProfileScreen() {
     fetchdata();
   }, [userId, token, image])
 
+
+  const onIconPress = () => {
+    console.log(isModify);
+    setIsModify(!isModify);
+  }
+
   console.log("user Token :", token);
   console.log("userId ", userId);
   return (
-    <View style={styles.profile}>
-      {isLoading ? (<ActivityIndicator />) : (
-        <>
-          <View style={styles.recap}>
-            <Text style={styles.pseudo}>Pseudo : {profileUser.account.username}</Text>
-            <View style={styles.info}>
-              {(profileUser.account.photos.length > 0) ?
-                <Image style={styles.images} source={{ uri: profileUser.account.photos[0] }} /> :
-                <Image style={styles.images} source={require("../assets/image-manquante.png")} />
-              }
+    <>
+      <View style={styles.modifier}>
+        <MaterialCommunityIcons style={styles.icon} name="square-edit-outline" size={24} onPress={onIconPress} />
+      </View>
+      <View style={styles.profile}>
+        {isLoading ? (<ActivityIndicator />) : (
+          <>
+            <View style={styles.recap}>
+              <Text style={styles.pseudo}>Pseudo : {profileUser.account.username}</Text>
+              <View style={styles.info}>
+                {(profileUser.account.photos.length > 0) ?
+                  <Image style={styles.images} source={{ uri: profileUser.account.photos[0] }} /> :
+                  // <Image style={styles.images} source={require("../assets/image-manquante.png")} />
+                  <Image style={styles.images} source={require("../assets/abs_photo.jpg")} />
+                }
+              </View>
             </View>
-          </View>
-          <View style={styles.labelPhoto}>
-            <Text style={styles.title}>Mettre a jour la photo :</Text>
-            <TouchableOpacity style={styles.button} onPress={pickImage}>
-              <View>
-                <Text>Depuis la bibliothèque</Text>
+
+            {
+              isModify &&
+              <View style={styles.labelPhoto}>
+                <Text style={styles.title}>Mettre a jour :</Text>
+                <TouchableOpacity style={styles.button} onPress={pickImage}>
+                  <View>
+                    <Text>Depuis la bibliothèque</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={takePhoto} >
+                  <View>
+                    <Text>Depuis l'appareil</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={takePhoto} >
-              <View>
-                <Text>Depuis l'appareil</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </>
-      )
-      }
-    </View>
+            }
+            <View style={styles.description}>
+              <Text style={styles.textDescription}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              In posuere metus sed ante tincidunt auctor. Cras faucibus dolor
+              in fermentum auctor. Quisque egestas posuere justo vitae tempus.
+              Proin sed nisl sapien. </Text>
+            </View>
+          </>
+        )
+        }
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  description: {
+    width: 300,
+    marginTop: 20,
+  },
+  textDescription: {
+    fontSize: 24,
+    lineHeight: 24,
+  },
+  modifier: {
+    height: 30,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
   recap: {
     flexDirection: "row",
 
   },
   pseudo: {
     marginTop: 20,
-  },
-  info: {
-    flex: 1,
-    height: 300,
-    width: 200,
-
-    backgroundColor: "blue",
+    fontSize: 24,
   },
   title: {
     marginRight: 30,
+    fontSize: 18,
   },
   labelPhoto: {
     height: 50,
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-    backgroundColor: "blue",
   },
   textBtn: {
     fontSize: 14,
@@ -210,14 +242,20 @@ const styles = StyleSheet.create({
   profile: {
     flex: 1,
     backgroundColor: "#EEEEEE",
-
+    alignItems: "center",
+  },
+  info: {
+    flex: 1,
+    height: 200,
+    width: 200,
+    marginBottom: 20,
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   images: {
-    position: "absolute",
     marginTop: 20,
-    marginLeft: 200,
-    height: 50,
-    width: 100,
+    height: 200,
+    width: 200,
+    borderRadius: 100,
   }
 });
